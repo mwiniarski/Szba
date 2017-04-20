@@ -3,6 +3,6 @@ Import('env')
 
 lib = env.StaticLibrary('parser', Glob('*.cpp'))
 
-tests = env.BoostTests(['tests/tests_main.cpp', 'tests/TokenTests.cpp'], lib)
+tests = env.BoostTests(Glob('tests/*.cpp'), lib)
 
 Return('lib')

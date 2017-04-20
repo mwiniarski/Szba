@@ -1,4 +1,5 @@
 #include "../Scanner.h"
+#include "../Source.h"
 
 #include <sstream>
 
@@ -8,11 +9,12 @@ using namespace parser;
 
 BOOST_AUTO_TEST_SUITE(ScannerTests)
 
-BOOST_AUTO_TEST_CASE(reading_token_before_first_advance_returns_eof)
+BOOST_AUTO_TEST_CASE(scanner_gets_source_arg_in_contstructor)
 {
-    std::istringstream in;
-    Scanner s(in);
-    BOOST_CHECK_EQUAL(s.getToken().getType(), Token::Type::Eof);
+    Source s(std::istringstream in("a"));
+
+    BOOST_CHECK_EQUAL(s.nextChar(), '\n');
+    BOOST_CHECK_EQUAL(s.nextChar(), EOF);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
