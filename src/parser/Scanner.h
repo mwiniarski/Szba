@@ -20,7 +20,7 @@ public:
     Token getToken() const;
 
 private:
-
+    void ignoreWhitespaces();
     // caly kod zrodlowy
     std::istream& in;
 

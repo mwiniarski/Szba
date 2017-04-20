@@ -6,23 +6,6 @@
 
 namespace parser
 {
-    
-static std::string atomName[] = {
-    "Ident", "Int", "String",
-
-    "Print", "Program", "SharedLib", "Lib",
-    "Def", "End",
-
-    "If", "Elseif", "Else", "While",
-
-    "True", "False", "Or", "And",
-
-    "Quot", "Lbra", "Rbra", "Lsquare", "Rsquare",
-    "Comma", "Colon", "Semic", "Dot",
-    "Eq", "Plus", "Pluseq", "Noteq",
-
-    "Eof"
-};
 
 class Token
 {
@@ -47,20 +30,24 @@ public:
         Comma, Colon, Semic, Dot,
         Eq, Plus, Pluseq, Noteq,
 
-        Eof
+        Eof, TYPE_COUNT
     };
 
-    Token();
+    Token();    //eof
     Token(Type t);
-    Token(Type t, int i);
+    Token(int i);
     Token(Type t, std::string s);
 
     Type getType() const { return type; }
-    std::string getString() { return stringValue; }
-    int getNumber() { return intValue; }
+    int getNumber();
+    std::string getString();
+
+    static Type findToken(std::string token);
     static std::string toString(Token::Type type);
 
 private:
+    static const std::string atomNames[(int)Type::TYPE_COUNT+1];
+    void throwTypeError(std::string msg);
     Type type;
 
     // jesli wczytany typ to ident, string lub liczba należy przechować wartość

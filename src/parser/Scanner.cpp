@@ -13,3 +13,20 @@ Token Scanner::getToken() const
 {
     return token;
 }
+
+void Scanner::ignoreWhitespaces(){
+    while (in && std::isspace(in.peek()))
+        in.get();
+}
+
+void Scanner::readNextToken(){
+    ignoreWhitespaces();
+
+    // koniec pliku
+    if(in.eof()) {
+        token = Token();
+        return;
+    }
+
+
+}
