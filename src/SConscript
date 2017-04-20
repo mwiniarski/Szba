@@ -1,0 +1,10 @@
+# -*- python -*-
+Import('env')
+
+parser_lib = env.SConscript('parser/SConscript')
+
+p = env.Program('tkom-calculator',
+                ['main.cpp']
+                ,LIBS=[parser_lib])
+
+Return('p')
