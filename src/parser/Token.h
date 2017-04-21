@@ -28,9 +28,9 @@ public:
         //op
         Quot, Lbra, Rbra, Lsquare, Rsquare,
         Comma, Colon, Semic, Dot,
-        Eq, Plus, Pluseq, Noteq,
+        Eqeq, Eq, Plus, Pluseq, Noteq, TYPE_COUNT,
 
-        Eof, TYPE_COUNT
+        Newline, Eof, None
     };
 
     Token();    //eof
@@ -46,7 +46,7 @@ public:
     static std::string toString(Token::Type type);
 
 private:
-    static const std::string atomNames[(int)Type::TYPE_COUNT+1];
+    static const std::string atomNames[(int)Type::TYPE_COUNT];
     void throwTypeError(std::string msg);
     Type type;
 

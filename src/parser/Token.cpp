@@ -3,7 +3,7 @@
 using namespace parser;
 
 Token::Token()
-    : type(Type::Eof) {}
+    : type(Type::None) {}
 
 Token::Token(Type t_)
     : type(t_) {}
@@ -32,7 +32,7 @@ std::string Token::getString() {
     return stringValue;
 }
 
-const std::string Token::atomNames[(int)Type::TYPE_COUNT+1] = {
+const std::string Token::atomNames[(int)Type::TYPE_COUNT] = {
        "Ident", "Int", "String",
 
        "Print", "Program", "SharedLib", "Lib",
@@ -40,13 +40,7 @@ const std::string Token::atomNames[(int)Type::TYPE_COUNT+1] = {
 
        "If", "Elseif", "Else", "While",
 
-       "True", "False", "Or", "And",
-
-       "Quot", "Lbra", "Rbra", "Lsquare", "Rsquare",
-       "Comma", "Colon", "Semic", "Dot",
-       "Eq", "Plus", "Pluseq", "Noteq",
-
-       "Eof"
+       "True", "False", "Or", "And"
 };
 
 std::string Token::toString(Token::Type type)
@@ -56,11 +50,11 @@ std::string Token::toString(Token::Type type)
 
 // check if given string is a known atom
 Token::Type Token::findToken(std::string token) {
-    for(int i=0; i<=(int)Type::Eof; i++){
+    for(int i=0; i<=(int)Type::And; i++){
         if(token == atomNames[i])
             return static_cast<Type>(i);
     }
-    return Type::Eof;
+    return Type::None;
 }
 
 void Token::throwTypeError(std::string msg)

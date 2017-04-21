@@ -8,10 +8,10 @@ using namespace parser;
 
 BOOST_AUTO_TEST_SUITE(TokenTests)
 
-BOOST_AUTO_TEST_CASE(default_token_has_eof_type)
+BOOST_AUTO_TEST_CASE(default_token_has_not_init_type)
 {
     Token t;
-    BOOST_CHECK_EQUAL(t.getType(), Token::Type::Eof);
+    BOOST_CHECK_EQUAL(t.getType(), Token::Type::None);
 }
 
 BOOST_AUTO_TEST_CASE(constructor_set_type_properly)
@@ -38,13 +38,13 @@ BOOST_AUTO_TEST_CASE(token_names_match_string_types)
     BOOST_CHECK_EQUAL(Token::findToken("Ident"), t1.getType());
     Token t2(Token::Type::Else);
     BOOST_CHECK_EQUAL(Token::findToken("Else"), t2.getType());
-    Token t3(Token::Type::Pluseq);
-    BOOST_CHECK_EQUAL(Token::findToken("Pluseq"), t3.getType());
+    Token t3(Token::Type::And);
+    BOOST_CHECK_EQUAL(Token::findToken("And"), t3.getType());
 }
 
-BOOST_AUTO_TEST_CASE(wrong_atom_name_gives_eof_type)
+BOOST_AUTO_TEST_CASE(wrong_atom_name_gives_none_type)
 {
-    BOOST_CHECK_EQUAL(Token::findToken("sdfg"), Token::Type::Eof);
+    BOOST_CHECK_EQUAL(Token::findToken("sdfg"), Token::Type::None);
 }
 
 BOOST_AUTO_TEST_CASE(assigning_string_to_wrong_type_throws_exception)
