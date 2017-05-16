@@ -33,7 +33,7 @@ public:
         Newline, Eof, None
     };
 
-    Token();    //eof
+    Token();
     Token(Type t);
     Token(int i);
     Token(Type t, std::string s);
