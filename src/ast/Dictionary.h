@@ -6,7 +6,7 @@ namespace ast {
 
 class Dictionary : public Expression {
 public:
-    typedef std::pair<std::string, std::unique_ptr<Factor>> pair;
+    typedef std::pair<std::unique_ptr<Var>, std::unique_ptr<Factor>> pair;
 
 private:
     std::vector<pair> elements;
@@ -20,7 +20,7 @@ public:
     std::string toString() const override {
         std::string ret;
         for(auto i = elements.begin(); i != elements.end(); ++i) {
-            ret += (*i).first + (*i).second->toString();
+            ret += (*i).first->toString() + (*i).second->toString();
         }
         return ret;
     }

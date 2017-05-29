@@ -36,24 +36,10 @@ std::unique_ptr<Statement> Parser::statement()
 
 std::unique_ptr<Assignment> Parser::assignment()
 {
-    auto assignexpr = assignExpr();
+    auto v = var();
     Operator op = oper();
     auto expr = expression();
-    return std::make_unique<Assignment>(std::move(assignexpr), op, std::move(expr));
-}
-
-std::unique_ptr<AssignExpr> Parser::assignExpr()
-{
-    std::string var1 = var();
-    if(checkToken(Token::Type::Dot))
-    {
-        advance();
-        std::string var2 = requireToken(Token::Type::Ident).getString();
-        advance();
-        return std::make_unique<AssignExpr>(var1, var2);
-    }
-
-    return std::make_unique<AssignExpr>(var1);
+    return std::make_unique<Assignment>(std::move(v), op, std::move(expr));
 }
 
 std::unique_ptr<Expression> Parser::expression()
@@ -61,13 +47,13 @@ std::unique_ptr<Expression> Parser::expression()
     if(checkToken(Token::Type::Int) ||
        checkToken(Token::Type::String)  ||
        checkToken(Token::Type::Lsquare))
-        return factor();
+        return operation();
 
     else if(checkToken(Token::Type::Lbra))
         return dictionary();
 
     else if(checkToken(Token::Type::Ident))
-        return assignExpr();
+        return var();
 
     else {
         throwUnexpectedInput(Token::Type::Int);
@@ -80,10 +66,10 @@ std::unique_ptr<Dictionary> Parser::dictionary()
     requireToken(Token::Type::Lbra);
     advance();
     auto dict = std::make_unique<Dictionary>();
-    std::string val = var();
+    auto val = var();
     requireToken(Token::Type::Colon);
     advance();
-    dict->add(std::make_pair(val, factor()));
+    dict->add(std::make_pair(std::move(val), factor()));
 
     while(checkToken(Token::Type::Comma))
     {
@@ -91,12 +77,24 @@ std::unique_ptr<Dictionary> Parser::dictionary()
         val = var();
         requireToken(Token::Type::Colon);
         advance();
-        dict->add(std::make_pair(val, factor()));
+        dict->add(std::make_pair(std::move(val), factor()));
     }
 
     requireToken(Token::Type::Rbra);
     advance();
     return dict;
+}
+
+std::unique_ptr<Operation> Parser::operation()
+{
+    auto oper = std::make_unique<Operation>(factor());
+
+    while(checkToken(Token::Type::Plus)) {
+        advance();
+        oper->add(factor());
+    };
+
+    return oper;
 }
 
 std::unique_ptr<Factor> Parser::factor()
@@ -134,6 +132,13 @@ std::unique_ptr<Constant> Parser::constant()
     }
 }
 
+std::unique_ptr<Var> Parser::var()
+{
+    auto ret = std::make_unique<Var>(requireToken(Token::Type::Ident).getString());
+    advance();
+    return ret;
+}
+
 Operator Parser::oper()
 {
     if(checkToken(Token::Type::Eq)){
@@ -144,13 +149,6 @@ Operator Parser::oper()
     requireToken(Token::Type::Pluseq);
     advance();
     return Operator::PlusEq;
-}
-
-std::string Parser::var()
-{
-    const auto ret = requireToken(Token::Type::Ident).getString();
-    advance();
-    return ret;
 }
 
 Token Parser::requireToken(Token::Type expected)

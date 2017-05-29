@@ -2,25 +2,25 @@
 #define ASSIGNMENT_H_
 
 #include "Statement.h"
-#include "AssignExpr.h"
+#include "Var.h"
 #include "Operator.h"
 
 namespace ast {
 
 class Assignment : public Statement {
 public:
-    Assignment(std::unique_ptr<AssignExpr> a_,
+    Assignment(std::unique_ptr<Var> a_,
                Operator o_,
                std::unique_ptr<Expression> e_)
-               :assignExpr(std::move(a_)), oper(o_), expr(std::move(e_))
+               :var(std::move(a_)), oper(o_), expr(std::move(e_))
                {}
     ~Assignment() {}
 
     std::string toString() const override {
-        return assignExpr->toString() + ast::toString(oper) + expr->toString();
+        return var->toString() + ast::toString(oper) + expr->toString();
     }
 private:
-    std::unique_ptr<AssignExpr> assignExpr;
+    std::unique_ptr<Var> var;
     Operator oper;
     std::unique_ptr<Expression> expr;
 };

@@ -17,13 +17,13 @@ private:
     std::unique_ptr<Block> block();
     std::unique_ptr<Statement> statement();
     std::unique_ptr<Assignment> assignment();
-    std::unique_ptr<AssignExpr> assignExpr();
     std::unique_ptr<Expression> expression();
     std::unique_ptr<Dictionary> dictionary();
+    std::unique_ptr<Operation> operation();
     std::unique_ptr<Factor> factor();
     std::unique_ptr<Constant> constant();
+    std::unique_ptr<Var> var();
     Operator oper();
-    std::string var();
     Token requireToken(Token::Type exp);
     bool checkToken(Token::Type exp);
 
