@@ -15,6 +15,10 @@ public:
                :assignExpr(std::move(a_)), oper(o_), expr(std::move(e_))
                {}
     ~Assignment() {}
+
+    std::string toString() const override {
+        return assignExpr->toString() + ast::toString(oper) + expr->toString();
+    }
 private:
     std::unique_ptr<AssignExpr> assignExpr;
     Operator oper;

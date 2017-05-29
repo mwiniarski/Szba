@@ -16,6 +16,14 @@ public:
         elements.push_back(std::move(elem_));
     }
     ~Dictionary() {}
+
+    std::string toString() const override {
+        std::string ret;
+        for(auto i = elements.begin(); i != elements.end(); ++i) {
+            ret += (*i).first + (*i).second->toString();
+        }
+        return ret;
+    }
 };
 
 }

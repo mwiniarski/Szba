@@ -14,6 +14,10 @@ public:
         :str1(s1_), str2(s2_), hasDot(true)
         {}
     AssignExpr() {}
+
+    std::string toString() const override {
+        return str1 + (hasDot ? str2 : "");
+    }
 private:
     std::string str1;
     std::string str2;

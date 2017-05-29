@@ -28,7 +28,10 @@ std::unique_ptr<Block> Parser::block()
 
 std::unique_ptr<Statement> Parser::statement()
 {
-    return assignment();
+    auto assign = assignment();
+    requireToken(Token::Type::Newline);
+    advance();
+    return assign;
 }
 
 std::unique_ptr<Assignment> Parser::assignment()
@@ -82,7 +85,7 @@ std::unique_ptr<Dictionary> Parser::dictionary()
     advance();
     dict->add(std::make_pair(val, factor()));
 
-    while(checkToken(Token::Type::Semic))
+    while(checkToken(Token::Type::Comma))
     {
         advance();
         val = var();
@@ -92,6 +95,7 @@ std::unique_ptr<Dictionary> Parser::dictionary()
     }
 
     requireToken(Token::Type::Rbra);
+    advance();
     return dict;
 }
 
@@ -101,17 +105,19 @@ std::unique_ptr<Factor> Parser::factor()
        checkToken(Token::Type::String))
         return std::make_unique<Factor>(constant());
 
+    //factor is list
     requireToken(Token::Type::Lsquare);
+    advance();
     auto tFactor = std::make_unique<Factor>();
     tFactor->add(constant());
 
-    while(checkToken(Token::Type::Semic)) {
+    while(checkToken(Token::Type::Comma)) {
         advance();
         tFactor->add(constant());
     };
 
     requireToken(Token::Type::Rsquare);
-
+    advance();
     return tFactor;
 }
 

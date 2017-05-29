@@ -90,8 +90,148 @@ BOOST_AUTO_TEST_CASE(parser_oper)
     Parser parser(std::make_unique<Scanner>(
         std::make_unique<Source>(in)));
     parser.advance();
-    BOOST_CHECK(parser.oper() == Operator::PlusEq);
-    BOOST_CHECK(parser.oper() == Operator::Eq);
+    BOOST_CHECK_EQUAL(ast::toString(parser.oper()), "+=");
+    BOOST_CHECK_EQUAL(ast::toString(parser.oper()), "=");
+}
+
+BOOST_AUTO_TEST_CASE(parser_factor_constant)
+{
+    is in("123 'hey!'");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    auto factor = parser.factor();
+    BOOST_CHECK_EQUAL(factor->toString(), "123");
+    factor = parser.factor();
+    BOOST_CHECK_EQUAL(factor->toString(), "hey!");
+}
+
+BOOST_AUTO_TEST_CASE(parser_factor_list_one_element)
+{
+    is in("[123]");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    auto factor = parser.factor();
+    BOOST_CHECK_EQUAL(factor->toString(), "123");
+}
+
+BOOST_AUTO_TEST_CASE(parser_factor_list)
+{
+    is in("[123,'a','b','c',65432]");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    auto factor = parser.factor();
+    BOOST_CHECK_EQUAL(factor->toString(), "123abc65432");
+}
+
+BOOST_AUTO_TEST_CASE(parser_factor_throw_error)
+{
+    is in("[123,");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_THROW(parser.factor(), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(parser_dictionary_one_item)
+{
+    is in("(a:5)");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    auto dict = parser.dictionary();
+    BOOST_CHECK_EQUAL(dict->toString(), "a5");
+}
+
+BOOST_AUTO_TEST_CASE(parser_dictionary)
+{
+    is in("(a:5,b:'b',c:[1,2,3],d:['a'])");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    auto dict = parser.dictionary();
+    BOOST_CHECK_EQUAL(dict->toString(), "a5bbc123da");
+}
+
+BOOST_AUTO_TEST_CASE(parser_dictionary_throw_error)
+{
+    is in("(gre:k)");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_THROW(parser.dictionary(), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(parser_assign_expr)
+{
+    is in("aVar.bVar cVar");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    auto a = parser.assignExpr();
+    BOOST_CHECK_EQUAL(a->toString(), "aVarbVar");
+    a = parser.assignExpr();
+    BOOST_CHECK_EQUAL(a->toString(), "cVar");
+}
+
+BOOST_AUTO_TEST_CASE(parser_expression)
+{
+    is in("aVar.bVar 'hey' 123 [124,'a'] (hey:'babe')");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.expression()->toString(), "aVarbVar");
+    BOOST_CHECK_EQUAL(parser.expression()->toString(), "hey");
+    BOOST_CHECK_EQUAL(parser.expression()->toString(), "123");
+    BOOST_CHECK_EQUAL(parser.expression()->toString(), "124a");
+    BOOST_CHECK_EQUAL(parser.expression()->toString(), "heybabe");
+}
+
+BOOST_AUTO_TEST_CASE(parser_assignment)
+{
+    is in("a = b c = 'd' e = 1 f.a = 5 c += ['oh','my','it'] w += orks"
+          " per += (f:'ectly')");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.assignment()->toString(), "a=b");
+    BOOST_CHECK_EQUAL(parser.assignment()->toString(), "c=d");
+    BOOST_CHECK_EQUAL(parser.assignment()->toString(), "e=1");
+    BOOST_CHECK_EQUAL(parser.assignment()->toString(), "fa=5");
+    BOOST_CHECK_EQUAL(parser.assignment()->toString(), "c+=ohmyit");
+    BOOST_CHECK_EQUAL(parser.assignment()->toString(), "w+=orks");
+    BOOST_CHECK_EQUAL(parser.assignment()->toString(), "per+=fectly");
+}
+
+BOOST_AUTO_TEST_CASE(parser_statement_with_endline)
+{
+    is in("a = b \n b=c");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.statement()->toString(), "a=b");
+    BOOST_CHECK_EQUAL(parser.statement()->toString(), "b=c");
+}
+
+BOOST_AUTO_TEST_CASE(parser_block)
+{
+    is in("hey.you += (come:['h','e'],r:'e') \n"
+          "I = need \n to.test += ['my', 'parser']");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.block()->toString(), "heyyou+=comehereI=needtotest+=myparser");
+}
+
+BOOST_AUTO_TEST_CASE(parser_program)
+{
+    is in("I = need \n to.test += ['my', 'parser']");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.program()->toString(), "I=needtotest+=myparser");
 }
 
 BOOST_AUTO_TEST_SUITE_END()

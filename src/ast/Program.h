@@ -13,6 +13,8 @@ public:
     Program(std::unique_ptr<Block> b_)
         :block(std::move(b_))
     {}
+
+    std::string toString() { return block->toString();}
 };
 
 }

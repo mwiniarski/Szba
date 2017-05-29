@@ -16,11 +16,14 @@ public:
     bool isString() {return isstring;}
     int getInt(){ return iint;}
     std::string getString() { return str;}
+
+    std::string toString() { return isString() ? str : std::to_string(iint);}
 private:
     std::string str;
     int iint;
     bool isstring;
 };
+
 
 }
 #endif

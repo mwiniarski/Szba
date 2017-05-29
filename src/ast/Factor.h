@@ -21,9 +21,19 @@ public:
         constants.push_back(std::move(c_));
     }
     ~Factor(){}
-    
+
     void add(std::unique_ptr<Constant> c_) {
+        if(!isList)
+            throw std::runtime_error("Factor error: adding value to non-list");
         constants.push_back(std::move(c_));
+    }
+
+    std::string toString() const override {
+        std::string ret;
+        for(auto i = constants.begin(); i != constants.end(); ++i) {
+            ret += (*i)->toString();
+        }
+        return ret;
     }
 };
 

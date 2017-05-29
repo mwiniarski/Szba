@@ -10,6 +10,8 @@ namespace ast {
 class Expression {
 public:
     virtual ~Expression() {}
+
+    virtual std::string toString() const = 0;
 };
 
 }
