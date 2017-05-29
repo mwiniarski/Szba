@@ -7,8 +7,7 @@ namespace ast {
 
 class Statement {
 public:
-    Statement();
-
+    virtual ~Statement() {}
 };
 
 }

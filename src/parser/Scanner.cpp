@@ -31,7 +31,7 @@ void Scanner::readNextToken(){
     ignoreWhitespaces();
 
     if(isEof()){
-        token = TT::Eof;
+        token = Token(TT::Eof);
         return;
     }
 
@@ -81,11 +81,12 @@ void Scanner::readNextToken(){
             buf += currentChar;
             next();
         }
+        next();
 
         token = Token(TT::String, buf);
         return;
     }
-    
+
     switch(currentChar) {
         case '\n': token = TT::Newline; break;
         case '\'': token = TT::Quot; break;

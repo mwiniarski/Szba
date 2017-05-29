@@ -40,7 +40,13 @@ const std::string Token::atomNames[(int)Type::TYPE_COUNT] = {
 
        "If", "Elseif", "Else", "While",
 
-       "True", "False", "Or", "And"
+       "True", "False", "Or", "And",
+
+       "'", "(", ")", "[", "]",
+       ",", ";", ":", ".",
+       "==", "=", "+", "+=", "!=",
+
+       "newline", "eof", "none"
 };
 
 std::string Token::toString(Token::Type type)

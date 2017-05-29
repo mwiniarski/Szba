@@ -20,7 +20,8 @@ public:
     {
         constants.push_back(std::move(c_));
     }
-
+    ~Factor(){}
+    
     void add(std::unique_ptr<Constant> c_) {
         constants.push_back(std::move(c_));
     }

@@ -13,7 +13,7 @@ public:
     AssignExpr(std::string s1_, std::string s2_)
         :str1(s1_), str2(s2_), hasDot(true)
         {}
-
+    AssignExpr() {}
 private:
     std::string str1;
     std::string str2;

@@ -28,9 +28,9 @@ public:
         //op
         Quot, Lbra, Rbra, Lsquare, Rsquare,
         Comma, Colon, Semic, Dot,
-        Eqeq, Eq, Plus, Pluseq, Noteq, TYPE_COUNT,
+        Eqeq, Eq, Plus, Pluseq, Noteq,
 
-        Newline, Eof, None
+        Newline, Eof, None, TYPE_COUNT
     };
 
     Token();

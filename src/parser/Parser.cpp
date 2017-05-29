@@ -4,6 +4,7 @@ using namespace parser;
 Parser::Parser(std::unique_ptr<Scanner> scanner_)
     : scanner(std::move(scanner_))
 {}
+Parser::~Parser() {}
 
 std::unique_ptr<Program> Parser::parse()
 {
@@ -45,6 +46,7 @@ std::unique_ptr<AssignExpr> Parser::assignExpr()
     {
         advance();
         std::string var2 = requireToken(Token::Type::Ident).getString();
+        advance();
         return std::make_unique<AssignExpr>(var1, var2);
     }
 
@@ -73,9 +75,11 @@ std::unique_ptr<Expression> Parser::expression()
 std::unique_ptr<Dictionary> Parser::dictionary()
 {
     requireToken(Token::Type::Lbra);
+    advance();
     auto dict = std::make_unique<Dictionary>();
     std::string val = var();
     requireToken(Token::Type::Colon);
+    advance();
     dict->add(std::make_pair(val, factor()));
 
     while(checkToken(Token::Type::Semic))
@@ -83,6 +87,7 @@ std::unique_ptr<Dictionary> Parser::dictionary()
         advance();
         val = var();
         requireToken(Token::Type::Colon);
+        advance();
         dict->add(std::make_pair(val, factor()));
     }
 
@@ -118,6 +123,7 @@ std::unique_ptr<Constant> Parser::constant()
         return std::make_unique<Constant>(val);
     } else {
         std::string val = requireToken(Token::Type::String).getString();
+        advance();
         return std::make_unique<Constant>(val);
     }
 }
@@ -130,19 +136,21 @@ Operator Parser::oper()
     }
 
     requireToken(Token::Type::Pluseq);
+    advance();
     return Operator::PlusEq;
 }
 
 std::string Parser::var()
 {
-    return requireToken(Token::Type::Ident).getString();
+    const auto ret = requireToken(Token::Type::Ident).getString();
+    advance();
+    return ret;
 }
 
 Token Parser::requireToken(Token::Type expected)
 {
     const auto token = scanner->getToken();
     const auto type = token.getType();
-    advance();
     if (type != expected)
         throwUnexpectedInput(expected);
     return token;
@@ -160,6 +168,6 @@ void Parser::advance()
 
 void Parser::throwUnexpectedInput(Token::Type expected)
 {
-    throw std::runtime_error("Unexpected token: " + scanner->getToken().getString()
+    throw std::runtime_error("Unexpected token: " + Token::toString(scanner->getToken().getType())
                                                      + ", expecting: " + Token::toString(expected));
 }

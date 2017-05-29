@@ -9,6 +9,9 @@ class Source {
 public:
     Source(std::istream& in);
 
+    Source(const Source&) = delete;
+    const Source& operator=(const Source&) = delete;
+    
     int nextChar();
 private:
 

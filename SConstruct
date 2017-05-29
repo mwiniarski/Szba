@@ -10,7 +10,8 @@ def create_options():
 
     return opts
 
-def fill_gcc_env_flags(env):
+def fill_env_flags(env):
+    env.Append(CPPPATH=['#/src'])
     env.Append(CCFLAGS=['-Wall', '-Wextra', '-Wpedantic', '-Werror'])
     env.Append(CCFLAGS=['--std=c++14'])
 
@@ -18,26 +19,6 @@ def fill_gcc_env_flags(env):
         env.Append(CCFLAGS=['-O0', '-g'])
     else:
         env.Append(CCFLAGS=['-O2'])
-
-def fill_cl_env_flags(env):
-    env.Append(CCFLAGS=['/W4', '/WX', '/EHsc'])
-    env.Append(CPPPATH=['/usr/local/Cellar/boost/1.63.0/include']) # TODO configurable
-    env.Append(LIBPATH=['/usr/local/Cellar/boost/1.63.0/lib']) # TODO configurable
-    env.Append(LINKFLAGS=['/SUBSYSTEM:CONSOLE'])
-
-    if env['debug']:
-        env.Append(CCFLAGS=['/MTd', '/Zi', '/Od'])
-        env.Append(LINKFLAGS=['/DEBUG'])
-    else:
-        env.Append(CCFLAGS=['/MT', '/O2'])
-
-def fill_env_flags(env):
-    env.Append(CPPPATH=['#/src'])
-
-    if env['CC'] == 'cl':
-        fill_cl_env_flags(env)
-    else:
-        fill_gcc_env_flags(env)
 
 def add_special_methods(env):
     boost_libs = [] if env['CC'] == 'cl' else ['boost_unit_test_framework-mt']

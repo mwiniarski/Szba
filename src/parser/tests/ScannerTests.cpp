@@ -9,6 +9,19 @@ using namespace parser;
 
 BOOST_AUTO_TEST_SUITE(ScannerTests)
 
+BOOST_AUTO_TEST_CASE(scanner_multiple_eofs)
+{
+    std::istringstream in("var123");
+    auto s = std::make_unique<Scanner>(std::make_unique<Source>(in));
+    s->readNextToken();
+    s->readNextToken();
+    s->readNextToken();
+    BOOST_CHECK_EQUAL(s->getToken().getType(), Token::Type::Eof);
+    s->readNextToken();
+    BOOST_CHECK_EQUAL(s->getToken().getType(), Token::Type::Eof);
+
+}
+
 BOOST_AUTO_TEST_CASE(scanner_gets_source_arg_in_contstructor)
 {
     std::istringstream in;
@@ -91,6 +104,20 @@ BOOST_AUTO_TEST_CASE(scanner_ultimate_test)
     s.readNextToken();
     BOOST_CHECK_EQUAL(s.getToken().getType(), Token::Type::String);
     BOOST_CHECK_EQUAL(s.getToken().getString(), "hehe");
+    s.readNextToken();
+    BOOST_CHECK_EQUAL(s.getToken().getType(), Token::Type::Newline);
+    s.readNextToken();
+    BOOST_CHECK_EQUAL(s.getToken().getType(), Token::Type::Eof);
+}
+
+BOOST_AUTO_TEST_CASE(scanner_eq_test)
+{
+    std::istringstream in("+= =");
+    auto s = std::make_unique<Scanner>(std::make_unique<Source>(in));
+    s->readNextToken();
+    BOOST_CHECK_EQUAL(s->getToken().getType(), Token::Type::Pluseq);
+    s->readNextToken();
+    BOOST_CHECK_EQUAL(s->getToken().getType(), Token::Type::Eq);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

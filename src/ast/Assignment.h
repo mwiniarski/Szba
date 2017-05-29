@@ -14,7 +14,7 @@ public:
                std::unique_ptr<Expression> e_)
                :assignExpr(std::move(a_)), oper(o_), expr(std::move(e_))
                {}
-
+    ~Assignment() {}
 private:
     std::unique_ptr<AssignExpr> assignExpr;
     Operator oper;

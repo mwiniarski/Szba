@@ -10,7 +10,7 @@ namespace parser {
 class Parser {
 public:
     Parser(std::unique_ptr<Scanner> scanner_);
-
+    ~Parser();
     std::unique_ptr<Program> parse();
 private:
     std::unique_ptr<Program> program();

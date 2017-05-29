@@ -12,11 +12,10 @@ private:
     std::vector<pair> elements;
 
 public:
-    Dictionary();
-
     void add(pair elem_) {
         elements.push_back(std::move(elem_));
     }
+    ~Dictionary() {}
 };
 
 }

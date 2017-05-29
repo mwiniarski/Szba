@@ -8,11 +8,10 @@ namespace ast {
 
 class Block {
 public:
-    Block();
-
     void add(std::unique_ptr<Statement> s_) {
         statements.push_back(std::move(s_));
     }
+    ~Block() {}
 private:
     std::vector<std::unique_ptr<Statement>> statements;
 };

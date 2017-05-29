@@ -41,6 +41,9 @@ BOOST_AUTO_TEST_CASE(nextchar_handles_spaces_and_nextlines)
     BOOST_CHECK_EQUAL(s.nextChar(), '\n');
     BOOST_CHECK_EQUAL(s.nextChar(), ' ');
     BOOST_CHECK_EQUAL(s.nextChar(), 'B');
+    BOOST_CHECK_EQUAL(s.nextChar(), '\n');
+    BOOST_CHECK_EQUAL(s.nextChar(), -1);
+    BOOST_CHECK_EQUAL(s.nextChar(), -1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
