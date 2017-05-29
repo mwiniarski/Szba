@@ -36,14 +36,14 @@ const std::string Token::atomNames[(int)Type::TYPE_COUNT] = {
        "Ident", "Int", "String",
 
        "Print", "Program", "SharedLib", "Lib",
-       "Def", "End",
+       "def", "end",
 
-       "If", "Elseif", "Else", "While",
+       "if", "else", "while",
 
-       "True", "False", "Or", "And",
+       "true", "false", "or", "and",
 
        "'", "(", ")", "[", "]",
-       ",", ";", ":", ".",
+       ",", ":", ";", ".",
        "==", "=", "+", "+=", "!=",
 
        "newline", "eof", "none"
@@ -56,7 +56,7 @@ std::string Token::toString(Token::Type type)
 
 // check if given string is a known atom
 Token::Type Token::findToken(std::string token) {
-    for(int i=0; i<=(int)Type::And; i++){
+    for(int i=(int)Type::Print; i<=(int)Type::And; i++){
         if(token == atomNames[i])
             return static_cast<Type>(i);
     }

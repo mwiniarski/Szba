@@ -20,7 +20,7 @@ public:
         Def, End,
 
         //if & loop
-        If, Elseif, Else, While,
+        If, Else, While,
 
         //logic
         True, False, Or, And,

@@ -3,14 +3,14 @@
 
 #include "Statement.h"
 #include "Var.h"
-#include "Operator.h"
+#include "AssignOp.h"
 
 namespace ast {
 
 class Assignment : public Statement {
 public:
     Assignment(std::unique_ptr<Var> a_,
-               Operator o_,
+               AssignOp o_,
                std::unique_ptr<Expression> e_)
                :var(std::move(a_)), oper(o_), expr(std::move(e_))
                {}
@@ -21,7 +21,7 @@ public:
     }
 private:
     std::unique_ptr<Var> var;
-    Operator oper;
+    AssignOp oper;
     std::unique_ptr<Expression> expr;
 };
 

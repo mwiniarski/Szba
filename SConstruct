@@ -38,7 +38,8 @@ def add_special_methods(env):
                            src,
                            LIBS=[lib] + depLibs + boost_libs,
                            CPPDEFINES=boost_defines)
-        env.Command(lib_name + "_test_passed.txt", test, run_unit_test)
+        if not env['debug']:
+            env.Command(lib_name + "_test_passed.txt", test, run_unit_test)
 
     env.AddMethod(build_and_run_test, "BoostTests")
 

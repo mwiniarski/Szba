@@ -34,12 +34,12 @@ BOOST_AUTO_TEST_CASE(constructor_set_string_properly)
 
 BOOST_AUTO_TEST_CASE(token_names_match_string_types)
 {
-    Token t1(Token::Type::Ident);
-    BOOST_CHECK_EQUAL(Token::findToken("Ident"), t1.getType());
+    Token t1(Token::Type::Print);
+    BOOST_CHECK_EQUAL(Token::findToken("Print"), t1.getType());
     Token t2(Token::Type::Else);
-    BOOST_CHECK_EQUAL(Token::findToken("Else"), t2.getType());
+    BOOST_CHECK_EQUAL(Token::findToken("else"), t2.getType());
     Token t3(Token::Type::And);
-    BOOST_CHECK_EQUAL(Token::findToken("And"), t3.getType());
+    BOOST_CHECK_EQUAL(Token::findToken("and"), t3.getType());
 }
 
 BOOST_AUTO_TEST_CASE(wrong_atom_name_gives_none_type)

@@ -90,8 +90,8 @@ BOOST_AUTO_TEST_CASE(parser_oper)
     Parser parser(std::make_unique<Scanner>(
         std::make_unique<Source>(in)));
     parser.advance();
-    BOOST_CHECK_EQUAL(ast::toString(parser.oper()), "+=");
-    BOOST_CHECK_EQUAL(ast::toString(parser.oper()), "=");
+    BOOST_CHECK_EQUAL(toString(parser.assignOp()), "+=");
+    BOOST_CHECK_EQUAL(toString(parser.assignOp()), "=");
 }
 
 BOOST_AUTO_TEST_CASE(parser_factor_constant)
@@ -203,9 +203,9 @@ BOOST_AUTO_TEST_CASE(parser_assignment)
     BOOST_CHECK_EQUAL(parser.assignment()->toString(), "per+=fectly");
 }
 
-BOOST_AUTO_TEST_CASE(parser_statement_with_endline)
+BOOST_AUTO_TEST_CASE(parser_statement)
 {
-    is in("a = b \n b=c");
+    is in("a = b b=c");
     Parser parser(std::make_unique<Scanner>(
         std::make_unique<Source>(in)));
     parser.advance();
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(parser_statement_with_endline)
     BOOST_CHECK_EQUAL(parser.statement()->toString(), "b=c");
 }
 
-BOOST_AUTO_TEST_CASE(parser_block)
+BOOST_AUTO_TEST_CASE(parser_block_with_endlines)
 {
     is in("hey += (come:['h','e'],r:'e') \n"
           "I = need \n to += ['test','my', 'parser']");
@@ -231,5 +231,89 @@ BOOST_AUTO_TEST_CASE(parser_program)
     parser.advance();
     BOOST_CHECK_EQUAL(parser.program()->toString(), "I=needto+=testmyparser5heh");
 }
+
+BOOST_AUTO_TEST_CASE(parser_relop)
+{
+    is in("== !=");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(toString(parser.relOp()), "==");
+    BOOST_CHECK_EQUAL(toString(parser.relOp()), "!=");
+}
+
+BOOST_AUTO_TEST_CASE(parser_logic_expr)
+{
+    is in("hello1 'asd' 123");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.logicExpr()->toString(), "hello1");
+    BOOST_CHECK_EQUAL(parser.logicExpr()->toString(), "asd");
+    BOOST_CHECK_EQUAL(parser.logicExpr()->toString(), "123");
+}
+
+BOOST_AUTO_TEST_CASE(parser_elsestat)
+{
+    is in("else \n a=6+3");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.elseStat()->toString(), "a=63");
+}
+
+BOOST_AUTO_TEST_CASE(parser_logic_cond)
+{
+    is in("hello != world ah == oh");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.logicCond()->toString(), "hello!=world");
+    BOOST_CHECK_EQUAL(parser.logicCond()->toString(), "ah==oh");
+}
+
+BOOST_AUTO_TEST_CASE(parser_ifstat)
+{
+    is in("if a==5 : \n b='maj' + 3 \n end");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.ifStat()->toString(), "a==5b=maj3");
+}
+
+BOOST_AUTO_TEST_CASE(parser_ifstat_else)
+{
+    is in("if a!=5: \n b='maj' + 3 \n else \n b='maj' + 2 \n end");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.ifStat()->toString(), "a!=5b=maj3b=maj2");
+}
+
+BOOST_AUTO_TEST_CASE(parser_if_in_if_in_if)
+{
+    is in("if a!=5: \n if b!=4: \n if c==3:\n b+=1\n end \nend\n end");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.ifStat()->toString(), "a!=5b!=4c==3b+=1");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 BOOST_AUTO_TEST_SUITE_END()

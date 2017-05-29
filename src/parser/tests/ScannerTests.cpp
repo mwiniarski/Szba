@@ -75,7 +75,7 @@ BOOST_AUTO_TEST_CASE(scanner_identify_string)
 
 BOOST_AUTO_TEST_CASE(scanner_ultimate_test)
 {
-    std::istringstream in("[]+=)=:\n;asd Def 345 'hehe'");
+    std::istringstream in("[]+=)=:\n;asd def 345 'hehe'");
     Scanner s(std::make_unique<Source>(in));
     s.readNextToken();
     BOOST_CHECK_EQUAL(s.getToken().getType(), Token::Type::Lsquare);

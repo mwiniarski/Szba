@@ -16,6 +16,10 @@ private:
     std::unique_ptr<Program> program();
     std::unique_ptr<Block> block();
     std::unique_ptr<Statement> statement();
+    std::unique_ptr<IfStat> ifStat();
+    std::unique_ptr<LogicCond> logicCond();
+    std::unique_ptr<LogicExpr> logicExpr();
+    std::unique_ptr<Block> elseStat();
     std::unique_ptr<Assignment> assignment();
     std::unique_ptr<Expression> expression();
     std::unique_ptr<Dictionary> dictionary();
@@ -23,7 +27,8 @@ private:
     std::unique_ptr<Factor> factor();
     std::unique_ptr<Constant> constant();
     std::unique_ptr<Var> var();
-    Operator oper();
+    RelOp relOp();
+    AssignOp assignOp();
     Token requireToken(Token::Type exp);
     bool checkToken(Token::Type exp);
 

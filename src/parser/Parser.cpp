@@ -15,29 +15,85 @@ std::unique_ptr<Program> Parser::parse()
 std::unique_ptr<Program> Parser::program()
 {
     auto tBlock = block();
+    requireToken(Token::Type::Eof);
     return std::make_unique<Program>(std::move(tBlock));
 }
 
 std::unique_ptr<Block> Parser::block()
 {
     auto tBlock = std::make_unique<Block>();
-    while(checkToken(Token::Type::Ident))
-        tBlock->add(std::move(statement()));
+    while(checkToken(Token::Type::Ident) ||
+          checkToken(Token::Type::If)) {
+        tBlock->add(statement());
+        requireToken(Token::Type::Newline);
+        advance();
+    }
     return tBlock;
 }
 
 std::unique_ptr<Statement> Parser::statement()
 {
-    auto assign = assignment();
+    std::unique_ptr<Statement> stat;
+    if(checkToken(Token::Type::If))
+        stat = std::move(ifStat());
+    else
+        stat = std::move(assignment());
+
+    return stat;
+}
+
+std::unique_ptr<IfStat> Parser::ifStat()
+{
+    requireToken(Token::Type::If);
+    advance();
+    auto logiccond = logicCond();
+    requireToken(Token::Type::Colon);
+    advance();
     requireToken(Token::Type::Newline);
     advance();
-    return assign;
+    auto bl = block();
+
+    auto ifstat = std::make_unique<IfStat>(std::move(logiccond), std::move(bl));
+
+    if(checkToken(Token::Type::End)) {
+        advance();
+    } else {
+        ifstat->addElse(elseStat());
+    }
+
+    return ifstat;
+}
+
+std::unique_ptr<LogicCond> Parser::logicCond()
+{
+    auto e1 = logicExpr();
+    RelOp ro = relOp();
+    auto e2 = logicExpr();
+    return std::make_unique<LogicCond>(std::move(e1), ro, std::move(e2));
+}
+
+std::unique_ptr<LogicExpr> Parser::logicExpr()
+{
+    if(checkToken(Token::Type::Int) ||
+       checkToken(Token::Type::String))
+       return constant();
+
+    return var();
+}
+
+std::unique_ptr<Block> Parser::elseStat()
+{
+    requireToken(Token::Type::Else);
+    advance();
+    requireToken(Token::Type::Newline);
+    advance();
+    return block();
 }
 
 std::unique_ptr<Assignment> Parser::assignment()
 {
     auto v = var();
-    Operator op = oper();
+    AssignOp op = assignOp();
     auto expr = expression();
     return std::make_unique<Assignment>(std::move(v), op, std::move(expr));
 }
@@ -52,13 +108,7 @@ std::unique_ptr<Expression> Parser::expression()
     else if(checkToken(Token::Type::Lbra))
         return dictionary();
 
-    else if(checkToken(Token::Type::Ident))
-        return var();
-
-    else {
-        throwUnexpectedInput(Token::Type::Int);
-        return nullptr;
-    }
+    return var();
 }
 
 std::unique_ptr<Dictionary> Parser::dictionary()
@@ -139,16 +189,28 @@ std::unique_ptr<Var> Parser::var()
     return ret;
 }
 
-Operator Parser::oper()
+RelOp Parser::relOp()
+{
+    if(checkToken(Token::Type::Eqeq)){
+        advance();
+        return RelOp::EqEq;
+    }
+
+    requireToken(Token::Type::Noteq);
+    advance();
+    return RelOp::NotEq;
+}
+
+AssignOp Parser::assignOp()
 {
     if(checkToken(Token::Type::Eq)){
         advance();
-        return Operator::Eq;
+        return AssignOp::Eq;
     }
 
     requireToken(Token::Type::Pluseq);
     advance();
-    return Operator::PlusEq;
+    return AssignOp::PlusEq;
 }
 
 Token Parser::requireToken(Token::Type expected)
