@@ -4,7 +4,7 @@
 #include "LogicExpr.h"
 namespace ast {
 
-class Constant : public LogicExpr {
+class Constant {
 public:
     Constant(std::string str_)
         :str(str_), isstring(true)

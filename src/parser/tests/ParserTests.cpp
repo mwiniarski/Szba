@@ -299,6 +299,88 @@ BOOST_AUTO_TEST_CASE(parser_if_in_if_in_if)
     BOOST_CHECK_EQUAL(parser.ifStat()->toString(), "a!=5b!=4c==3b+=1");
 }
 
+BOOST_AUTO_TEST_CASE(parser_program_ultimate1)
+{
+    is in("a = (a:'b', b:5) \n"
+          "if ['a'] == var1:\n"
+          "if asd != 'asd': \n"
+          "asd += 5\n"
+          "end \n"
+          "a = 5\n"
+          "end");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.program()->toString(), "a=abb5a==var1asd!=asdasd+=5a=5");
+}
+
+BOOST_AUTO_TEST_CASE(parser_while_stat)
+{
+    is in("while a != b: \n"
+          "a+=1\n"
+          "end");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.whileStat()->toString(), "a!=ba+=1");
+}
+
+BOOST_AUTO_TEST_CASE(parser_print_stat)
+{
+    is in("Print('Hello world') Print(123)");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.printStat()->toString(), "Hello world");
+    BOOST_CHECK_EQUAL(parser.printStat()->toString(), "123");
+}
+
+BOOST_AUTO_TEST_CASE(parser_exec_stat)
+{
+    is in("Program((a:'b'), ['a','b'], 555)");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.execStat()->toString(), "progabab555");
+}
+
+BOOST_AUTO_TEST_CASE(parser_func_def)
+{
+    is in("def funkcja():\n a+=5 \n end def asd(a,b,c):\n if a==5:\n a+=1\n end\n end");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.funcDef()->toString(), "funkcjaa+=5");
+    BOOST_CHECK_EQUAL(parser.funcDef()->toString(), "asdabca==5a+=1");
+}
+
+BOOST_AUTO_TEST_CASE(parser_func_invoke)
+{
+    is in("fun funkcja() fun asd((a:'6'), 4)");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    parser.advance();
+    BOOST_CHECK_EQUAL(parser.funcInvoke()->toString(), "funkcja");
+    BOOST_CHECK_EQUAL(parser.funcInvoke()->toString(), "asda64");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

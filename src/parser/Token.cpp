@@ -36,11 +36,11 @@ const std::string Token::atomNames[(int)Type::TYPE_COUNT] = {
        "Ident", "Int", "String",
 
        "Print", "Program", "SharedLib", "Lib",
-       "def", "end",
+       "def", "end", "fun",
 
        "if", "else", "while",
 
-       "true", "false", "or", "and",
+       "or", "and",
 
        "'", "(", ")", "[", "]",
        ",", ":", ";", ".",

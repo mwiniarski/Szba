@@ -16,8 +16,8 @@ BOOST_AUTO_TEST_CASE(default_token_has_not_init_type)
 
 BOOST_AUTO_TEST_CASE(constructor_set_type_properly)
 {
-    Token t(Token::Type::False);
-    BOOST_CHECK_EQUAL(t.getType(), Token::Type::False);
+    Token t(Token::Type::Fun);
+    BOOST_CHECK_EQUAL(t.getType(), Token::Type::Fun);
 }
 
 BOOST_AUTO_TEST_CASE(constructor_set_int_properly)
@@ -49,12 +49,12 @@ BOOST_AUTO_TEST_CASE(wrong_atom_name_gives_none_type)
 
 BOOST_AUTO_TEST_CASE(assigning_string_to_wrong_type_throws_exception)
 {
-    BOOST_CHECK_THROW(Token(Token::Type::False, "hello"), std::runtime_error);
+    BOOST_CHECK_THROW(Token(Token::Type::And, "hello"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(getting_int_from_wrong_type_throws_exception)
 {
-    Token t1(Token::Type::False);
+    Token t1(Token::Type::Def);
     BOOST_CHECK_THROW(t1.getNumber(), std::runtime_error);
 }
 

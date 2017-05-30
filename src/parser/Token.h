@@ -17,13 +17,13 @@ public:
 
         //key functions
         Print, Program, SharedLib, Lib,
-        Def, End,
+        Def, End, Fun,
 
         //if & loop
         If, Else, While,
 
         //logic
-        True, False, Or, And,
+        Or, And,
 
         //op
         Quot, Lbra, Rbra, Lsquare, Rsquare,

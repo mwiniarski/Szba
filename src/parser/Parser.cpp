@@ -42,6 +42,102 @@ std::unique_ptr<Statement> Parser::statement()
     return stat;
 }
 
+std::unique_ptr<WhileStat> Parser::whileStat()
+{
+    requireToken(Token::Type::While);
+    advance();
+    auto logiccond = logicCond();
+    requireToken(Token::Type::Colon);
+    advance();
+    requireToken(Token::Type::Newline);
+    advance();
+    auto bl = block();
+
+    return std::make_unique<WhileStat>(std::move(logiccond), std::move(bl));
+}
+
+std::unique_ptr<PrintStat> Parser::printStat()
+{
+    requireToken(Token::Type::Print);
+    advance();
+    requireToken(Token::Type::Lbra);
+    advance();
+    auto con = constant();
+    requireToken(Token::Type::Rbra);
+    advance();
+    return std::make_unique<PrintStat>(std::move(con));
+}
+
+std::unique_ptr<ExecStat> Parser::execStat()
+{
+    std::string ex = exec();
+    requireToken(Token::Type::Lbra);
+    advance();
+    auto expr1 = expression();
+    requireToken(Token::Type::Comma);
+    advance();
+    auto expr2 = expression();
+    requireToken(Token::Type::Comma);
+    advance();
+    auto expr3 = expression();
+    requireToken(Token::Type::Rbra);
+    advance();
+    return std::make_unique<ExecStat>(ex,
+                                      std::move(expr1),
+                                      std::move(expr2),
+                                      std::move(expr3));
+}
+
+std::unique_ptr<FuncDef> Parser::funcDef()
+{
+    requireToken(Token::Type::Def);
+    advance();
+    auto ret = std::make_unique<FuncDef>(var());
+    requireToken(Token::Type::Lbra);
+    advance();
+    if(!checkToken(Token::Type::Rbra)) {
+        ret->addArg(var());
+        while(checkToken(Token::Type::Comma)) {
+            advance();
+            ret->addArg(var());
+        }
+        requireToken(Token::Type::Rbra);
+        advance();
+    } else
+        advance();
+
+    requireToken(Token::Type::Colon);
+    advance();
+    requireToken(Token::Type::Newline);
+    advance();
+    ret->addBlock(block());
+    requireToken(Token::Type::End);
+    advance();
+    return ret;
+}
+
+std::unique_ptr<FuncInvoke> Parser::funcInvoke()
+{
+    requireToken(Token::Type::Fun);
+    advance();
+    auto ret = std::make_unique<FuncInvoke>(var());
+    requireToken(Token::Type::Lbra);
+    advance();
+
+    if(!checkToken(Token::Type::Rbra)) {
+        ret->addArg(expression());
+        while(checkToken(Token::Type::Comma)) {
+            advance();
+            ret->addArg(expression());
+        }
+        requireToken(Token::Type::Rbra);
+        advance();
+    } else
+        advance();
+
+    return ret;
+}
+
 std::unique_ptr<IfStat> Parser::ifStat()
 {
     requireToken(Token::Type::If);
@@ -75,8 +171,9 @@ std::unique_ptr<LogicCond> Parser::logicCond()
 std::unique_ptr<LogicExpr> Parser::logicExpr()
 {
     if(checkToken(Token::Type::Int) ||
-       checkToken(Token::Type::String))
-       return constant();
+       checkToken(Token::Type::String) ||
+       checkToken(Token::Type::Lsquare))
+       return factor();
 
     return var();
 }
@@ -187,6 +284,21 @@ std::unique_ptr<Var> Parser::var()
     auto ret = std::make_unique<Var>(requireToken(Token::Type::Ident).getString());
     advance();
     return ret;
+}
+std::string Parser::exec()
+{
+    std::string ex;
+    if(checkToken(Token::Type::Program))
+        ex = "prog";
+    else
+    if(checkToken(Token::Type::SharedLib))
+        ex = "shared";
+    else {
+        requireToken(Token::Type::Lib);
+        ex = "lib";
+    }
+    advance();
+    return ex;
 }
 
 RelOp Parser::relOp()

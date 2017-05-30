@@ -6,7 +6,7 @@
 
 namespace ast {
 
-class Factor : public Expression {
+class Factor : public Expression, public LogicExpr {
 private:
     std::vector<std::unique_ptr<Constant>> constants;
     bool isList;
