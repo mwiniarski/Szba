@@ -17,13 +17,13 @@ private:
     std::unique_ptr<Block> block();
     std::unique_ptr<Statement> statement();
     std::unique_ptr<WhileStat> whileStat();
+    std::unique_ptr<VarFactor> varFactor();
     std::unique_ptr<PrintStat> printStat();
     std::unique_ptr<ExecStat> execStat();
     std::unique_ptr<FuncInvoke> funcInvoke();
     std::unique_ptr<FuncDef> funcDef();
     std::unique_ptr<IfStat> ifStat();
     std::unique_ptr<LogicCond> logicCond();
-    std::unique_ptr<LogicExpr> logicExpr();
     std::unique_ptr<Block> elseStat();
     std::unique_ptr<Assignment> assignment();
     std::unique_ptr<Expression> expression();

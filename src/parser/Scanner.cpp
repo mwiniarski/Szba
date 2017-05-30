@@ -87,15 +87,23 @@ void Scanner::readNextToken(){
         return;
     }
 
+    if(currentChar == '\n') {
+        do{
+            next();
+            ignoreWhitespaces();
+        } while(currentChar == '\n');
+
+        token = TT::Newline;
+        return;
+    }
+
     switch(currentChar) {
-        case '\n': token = TT::Newline; break;
         case '\'': token = TT::Quot; break;
         case '(' : token = TT::Lbra; break;
         case ')' : token = TT::Rbra; break;
         case '[' : token = TT::Lsquare; break;
         case ']' : token = TT::Rsquare; break;
         case ',' : token = TT::Comma; break;
-        case '.' : token = TT::Dot; break;
         case ';' : token = TT::Semic; break;
         case ':' : token = TT::Colon; break;
         case '!' : next();  if(currentChar == '=')
@@ -121,5 +129,5 @@ void Scanner::readNextToken(){
 }
 
 void Scanner::throwScannerError(std::string msg){
-    throw std::runtime_error("Scanner error: " + msg);
+    throw std::runtime_error("Scanner error: " + msg + "on line " + std::to_string(source->getLineNumber()));
 }

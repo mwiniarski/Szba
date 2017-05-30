@@ -43,7 +43,7 @@ const std::string Token::atomNames[(int)Type::TYPE_COUNT] = {
        "or", "and",
 
        "'", "(", ")", "[", "]",
-       ",", ":", ";", ".",
+       ",", ":", ";",
        "==", "=", "+", "+=", "!=",
 
        "newline", "eof", "none"

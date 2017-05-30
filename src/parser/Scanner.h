@@ -21,7 +21,7 @@ public:
 
     void readNextToken();
     Token getToken() { return token; }
-
+    int getCurrentLine(){return source->getLineNumber();}
 private:
     void throwScannerError(std::string msg);
     void ignoreWhitespaces();

@@ -1,16 +1,16 @@
 #ifndef PRINTSTAT_H_
 #define PRINTSTAT_H_
 
-#include "Constant.h"
+#include "VarFactor.h"
 #include "Statement.h"
 
 namespace ast {
 
 class PrintStat : public Statement {
 private:
-    std::unique_ptr<Constant> print;
+    std::unique_ptr<VarFactor> print;
 public:
-    PrintStat(std::unique_ptr<Constant> p_)
+    PrintStat(std::unique_ptr<VarFactor> p_)
         :print(std::move(p_))
     {}
 

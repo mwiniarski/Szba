@@ -7,6 +7,7 @@
 #undef private
 #include <sstream>
 #include <iostream>
+#include <fstream>
 
 using namespace parser;
 using namespace std;

@@ -3,7 +3,7 @@
 using namespace parser;
 
 Source::Source(std::istream& in_)
-    : stream(in_)
+    :currentLineNumber(0), stream(in_)
 {
     nextLine();
 }
@@ -12,6 +12,7 @@ bool Source::nextLine(){
     if(stream.eof())
         return false;
 
+    currentLineNumber++;
     getline(stream, currentLine);
     currentLine.push_back('\n');
     it = currentLine.begin();

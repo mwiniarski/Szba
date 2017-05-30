@@ -2,11 +2,11 @@
 #define VAR_H_
 
 #include "Expression.h"
-#include "LogicExpr.h"
+#include "VarFactor.h"
 
 namespace ast {
 
-class Var : public Expression, public LogicExpr {
+class Var : public Expression, public VarFactor {
 public:
     Var(std::string str_)
         :str(str_)
@@ -17,7 +17,6 @@ public:
 private:
     std::string str;
 };
-
 
 }
 #endif

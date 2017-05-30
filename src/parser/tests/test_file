@@ -1,0 +1,30 @@
+def someFunction():
+    Print('Im here!')
+end
+
+def calculator(a, b):
+    c = a + b
+    
+    if c == 5:
+        dict = (n1: 'm1', n2: [1,2,3])
+        list = [1,'two',3]
+    end
+end
+
+i = 0
+
+while i != 20 :
+    i += 4
+    Program((CXX : 'g++-6', LIBPATH : '/usr/local'), i, i + 7)
+
+    fun calculator(i, 5)
+
+    Print(1000000)
+    dict123 = (CC : 'gcc', Framework : 'Python')
+
+    if 12 + 17 == result :
+        SharedLib(dict, 1, ['.'])
+    end
+
+    fun someFunction()
+end

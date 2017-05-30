@@ -3,10 +3,11 @@
 
 #include "Expression.h"
 #include "Constant.h"
+#include "VarFactor.h"
 
 namespace ast {
 
-class Factor : public Expression, public LogicExpr {
+class Factor : public Expression, public VarFactor {
 private:
     std::vector<std::unique_ptr<Constant>> constants;
     bool isList;

@@ -27,7 +27,7 @@ public:
 
         //op
         Quot, Lbra, Rbra, Lsquare, Rsquare,
-        Comma, Colon, Semic, Dot,
+        Comma, Colon, Semic,
         Eqeq, Eq, Plus, Pluseq, Noteq,
 
         Newline, Eof, None, TYPE_COUNT

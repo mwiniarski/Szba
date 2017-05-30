@@ -11,10 +11,11 @@ public:
 
     Source(const Source&) = delete;
     const Source& operator=(const Source&) = delete;
-    
-    int nextChar();
-private:
 
+    int nextChar();
+    int getLineNumber() {return currentLineNumber;}
+private:
+    int currentLineNumber;
     bool nextLine();
     std::string::iterator it;
     std::string currentLine;

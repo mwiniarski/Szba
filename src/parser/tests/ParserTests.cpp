@@ -3,7 +3,8 @@
 #undef private
 
 #include <sstream>
-
+#include <fstream>
+#include <iostream>
 #include <boost/test/unit_test.hpp>
 
 using namespace parser;
@@ -248,9 +249,9 @@ BOOST_AUTO_TEST_CASE(parser_logic_expr)
     Parser parser(std::make_unique<Scanner>(
         std::make_unique<Source>(in)));
     parser.advance();
-    BOOST_CHECK_EQUAL(parser.logicExpr()->toString(), "hello1");
-    BOOST_CHECK_EQUAL(parser.logicExpr()->toString(), "asd");
-    BOOST_CHECK_EQUAL(parser.logicExpr()->toString(), "123");
+    BOOST_CHECK_EQUAL(parser.varFactor()->toString(), "hello1");
+    BOOST_CHECK_EQUAL(parser.varFactor()->toString(), "asd");
+    BOOST_CHECK_EQUAL(parser.varFactor()->toString(), "123");
 }
 
 BOOST_AUTO_TEST_CASE(parser_elsestat)
@@ -346,7 +347,7 @@ BOOST_AUTO_TEST_CASE(parser_exec_stat)
 
 BOOST_AUTO_TEST_CASE(parser_func_def)
 {
-    is in("def funkcja():\n a+=5 \n end def asd(a,b,c):\n if a==5:\n a+=1\n end\n end");
+    is in("def funkcja():\n a+=5 \n end \n def asd(a,b,c):\n if a==5:\n a+=1\n end\n end");
     Parser parser(std::make_unique<Scanner>(
         std::make_unique<Source>(in)));
     parser.advance();
@@ -364,6 +365,25 @@ BOOST_AUTO_TEST_CASE(parser_func_invoke)
     BOOST_CHECK_EQUAL(parser.funcInvoke()->toString(), "asda64");
 }
 
+BOOST_AUTO_TEST_CASE(parser_func_in_while)
+{
+    is in("while i != 20:\n fun someFun() \n end \n");
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(in)));
+    BOOST_CHECK_EQUAL(parser.parse()->toString(), "i!=20someFun");
+}
+
+BOOST_AUTO_TEST_CASE(parser_test_file)
+{
+    std::ifstream file("src/parser/tests/test_file");
+
+    Parser parser(std::make_unique<Scanner>(
+        std::make_unique<Source>(file)));
+    BOOST_CHECK_EQUAL(parser.parse()->toString(),
+    "someFunctionIm here!calculatorabc=abc==5dict=n1m1n2123list=1two3i=0i!=20"
+    "i+=4progCXXg++-6LIBPATH/usr/localii7calculatori51000000dict123=CCgccFrameworkPython"
+    "1217==resultshareddict1.someFunction");
+}
 
 
 

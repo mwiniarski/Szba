@@ -3,6 +3,7 @@
 #include "IfStat.h"
 #include "FuncInvoke.h"
 #include "ExecStat.h"
+#include "VarFactor.h"
 #include "PrintStat.h"
 #include "WhileStat.h"
 #include "FuncDef.h"
